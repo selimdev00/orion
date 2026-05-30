@@ -1,62 +1,66 @@
 .wrap {
   padding-block: var(--space-24);
-  display: flex;
-  justify-content: center;
 }
 
 .box {
-  max-width: 460px;
-  text-align: center;
-  padding: var(--space-12) var(--space-8);
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  max-width: 48ch;
+  border-top: 2px solid var(--abort);
+  padding-top: var(--space-6);
 }
 
-.icon {
-  display: inline-flex;
-  color: var(--danger);
-  margin-bottom: var(--space-4);
+.code {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  color: var(--abort);
 }
 
 .title {
-  font-size: 1.6rem;
-  margin-bottom: var(--space-3);
+  margin-top: var(--space-3);
+  font-size: var(--fs-h2);
 }
 
 .body {
-  color: var(--text-muted);
-  margin-bottom: var(--space-8);
+  margin-top: var(--space-3);
+  color: var(--ink-muted);
+  max-width: 50ch;
 }
 
 .actions {
   display: flex;
-  justify-content: center;
   gap: var(--space-3);
+  margin-top: var(--space-8);
 }
 
 .retry {
-  padding: 0.75rem 1.4rem;
-  border-radius: var(--radius-pill);
-  font-weight: 600;
-  color: #fff;
-  background: linear-gradient(100deg, var(--accent), var(--accent-2));
-  transition: transform var(--dur-fast) var(--ease);
+  padding: 0.6rem 1.3rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  color: var(--paper);
+  background: var(--accent);
+  transition: background var(--dur-fast) var(--ease);
 
   &:hover {
-    transform: translateY(-2px);
+    background: var(--accent-ink);
   }
 }
 
 .home {
-  padding: 0.75rem 1.4rem;
-  border-radius: var(--radius-pill);
-  font-weight: 600;
-  color: var(--text-muted);
-  border: 1px solid var(--border);
+  padding: 0.6rem 1.3rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  color: var(--ink-muted);
+  border: 1px solid var(--rule-strong);
   transition: color var(--dur-fast) var(--ease);
 
   &:hover {
-    color: var(--text);
+    color: var(--ink);
   }
 }

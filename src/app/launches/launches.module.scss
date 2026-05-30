@@ -3,56 +3,90 @@
 }
 
 .head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-3);
   margin-bottom: var(--space-8);
 }
 
 .title {
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-size: var(--fs-h2);
+  margin-top: var(--space-2);
+  max-width: 18ch;
+}
+
+.lead {
+  margin-top: var(--space-3);
+  color: var(--ink-muted);
+  font-size: var(--fs-lead);
+  max-width: 60ch;
 }
 
 .count {
-  color: var(--text-muted);
-  font-size: 0.95rem;
+  margin-top: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  color: var(--ink-dim);
+}
+
+.countNum {
+  color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-4);
+/* --- ledger --- */
+.ledger {
+  border-top: 1px solid var(--rule-strong);
+  border-bottom: 1px solid var(--rule-strong);
 }
 
+.colHead {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr auto 7.5rem;
+  gap: var(--space-4);
+  align-items: center;
+  padding: var(--space-2) var(--space-2);
+  border-bottom: 1px solid var(--rule-strong);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  color: var(--ink-dim);
+}
+
+.colStatus {
+  justify-self: end;
+}
+
+.rows {
+  display: block;
+}
+
+.rows li:nth-child(even) {
+  background: var(--paper-2);
+}
+
+/* --- empty state --- */
 .empty {
-  text-align: center;
-  padding: var(--space-24) var(--space-4);
-  background: var(--bg-card);
-  border: 1px dashed var(--border-strong);
-  border-radius: var(--radius-lg);
+  padding: var(--space-16) var(--space-4);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
 }
 
 .emptyTitle {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: var(--space-2);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  font-size: var(--fs-data);
+  color: var(--ink);
 }
 
 .emptyHint {
-  color: var(--text-muted);
+  margin-top: var(--space-2);
+  color: var(--ink-muted);
 }
 
-@media (min-width: 640px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1000px) {
-  .grid {
-    grid-template-columns: repeat(3, 1fr);
+@media (max-width: 640px) {
+  .colHead {
+    display: none;
   }
 }

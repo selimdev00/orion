@@ -1,27 +1,28 @@
 .pagination {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: var(--space-4);
-  margin-top: var(--space-12);
+  margin-top: var(--space-8);
+  padding-top: var(--space-4);
 }
 
 .btn {
-  padding: 0.6rem 1.1rem;
-  border-radius: var(--radius-pill);
-  font-weight: 600;
-  font-size: 0.9rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  padding: 0.5rem 1.1rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  color: var(--ink);
+  border: 1px solid var(--rule-strong);
   transition:
-    border-color var(--dur-fast) var(--ease),
-    background var(--dur-fast) var(--ease),
-    transform var(--dur-fast) var(--ease);
+    color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
 
   &:hover {
-    border-color: var(--border-strong);
-    background: var(--bg-card-hover);
-    transform: translateY(-1px);
+    color: var(--accent-ink);
+    border-color: var(--accent);
   }
 }
 
@@ -31,11 +32,15 @@
 }
 
 .status {
-  font-size: 0.9rem;
-  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  color: var(--ink-dim);
   font-variant-numeric: tabular-nums;
 
   strong {
-    color: var(--text);
+    color: var(--ink);
+    font-weight: 600;
   }
 }

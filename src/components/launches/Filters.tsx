@@ -58,48 +58,21 @@ export function Filters() {
       aria-label="Filter launches"
       onSubmit={(e) => e.preventDefault()}
     >
-      <div className={styles.searchWrap}>
-        <svg
-          className={styles.searchIcon}
-          viewBox="0 0 24 24"
-          width="18"
-          height="18"
-          aria-hidden="true"
-        >
-          <circle
-            cx="11"
-            cy="11"
-            r="7"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          />
-          <line
-            x1="16.5"
-            y1="16.5"
-            x2="21"
-            y2="21"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-        </svg>
-        <input
-          type="search"
-          className={styles.search}
-          placeholder="Search by mission name…"
-          value={q}
-          onChange={(e) => onSearchChange(e.target.value)}
-          aria-label="Search by mission name"
-        />
-      </div>
+      <input
+        type="search"
+        className={styles.search}
+        placeholder="Search mission name"
+        value={q}
+        onChange={(e) => onSearchChange(e.target.value)}
+        aria-label="Search by mission name"
+      />
 
-      <div className={styles.statusGroup} role="group" aria-label="Status">
+      <div className={styles.group} role="group" aria-label="Outcome">
         {statuses.map((s) => (
           <button
             key={s.value || "all"}
             type="button"
-            className={`${styles.chip} ${status === s.value ? styles.chipActive : ""}`}
+            className={`${styles.pill} ${status === s.value ? styles.active : ""}`}
             aria-pressed={status === s.value}
             onClick={() => pushParams({ status: s.value })}
           >
@@ -128,7 +101,7 @@ export function Filters() {
       {hasActive ? (
         <button
           type="button"
-          className={styles.reset}
+          className={styles.clear}
           onClick={() => router.push("/launches", { scroll: false })}
         >
           Clear

@@ -1,33 +1,38 @@
 import styles from "./loading.module.scss";
 
-const CARDS = 9;
+const ROWS = 10;
 
 export default function LaunchesLoading() {
   return (
-    <div className={`container ${styles.page}`}>
-      <div className={styles.head}>
+    <div className={`container ${styles.page}`} aria-busy="true">
+      <span className="visually-hidden">Loading launch archive</span>
+
+      <div className={styles.head} aria-hidden="true">
+        <span className={`${styles.shimmer} ${styles.eyebrowBar}`} />
         <span className={`${styles.shimmer} ${styles.titleBar}`} />
+        <span className={`${styles.shimmer} ${styles.leadBar}`} />
         <span className={`${styles.shimmer} ${styles.countBar}`} />
       </div>
 
-      <div className={styles.filters}>
+      <div className={styles.filters} aria-hidden="true">
         <span className={`${styles.shimmer} ${styles.searchBar}`} />
         <span className={`${styles.shimmer} ${styles.chipBar}`} />
         <span className={`${styles.shimmer} ${styles.yearBar}`} />
       </div>
 
-      <ul className={styles.grid} aria-hidden="true">
-        {Array.from({ length: CARDS }).map((_, i) => (
-          <li key={i} className={styles.card}>
-            <span className={`${styles.shimmer} ${styles.patch}`} />
-            <div className={styles.body}>
-              <span className={`${styles.shimmer} ${styles.lineSm}`} />
-              <span className={`${styles.shimmer} ${styles.lineLg}`} />
-              <span className={`${styles.shimmer} ${styles.lineMd}`} />
-            </div>
-          </li>
+      <div className={styles.ledger} aria-hidden="true">
+        {Array.from({ length: ROWS }).map((_, i) => (
+          <div key={i} className={styles.row}>
+            <span className={`${styles.shimmer} ${styles.flight}`} />
+            <span className={styles.mission}>
+              <span className={`${styles.shimmer} ${styles.patch}`} />
+              <span className={`${styles.shimmer} ${styles.name}`} />
+            </span>
+            <span className={`${styles.shimmer} ${styles.date}`} />
+            <span className={`${styles.shimmer} ${styles.status}`} />
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

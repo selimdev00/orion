@@ -31,7 +31,7 @@ export function Pagination({ page, totalPages, searchParams }: Props) {
     <nav className={styles.pagination} aria-label="Pagination">
       {prevDisabled ? (
         <span className={`${styles.btn} ${styles.disabled}`} aria-disabled>
-          ← Prev
+          Prev
         </span>
       ) : (
         <Link
@@ -40,17 +40,18 @@ export function Pagination({ page, totalPages, searchParams }: Props) {
           scroll={false}
           rel="prev"
         >
-          ← Prev
+          Prev
         </Link>
       )}
 
       <span className={styles.status} aria-live="polite">
-        Page <strong>{page}</strong> of {totalPages}
+        Page <strong>{String(page).padStart(2, "0")}</strong> /{" "}
+        {String(totalPages).padStart(2, "0")}
       </span>
 
       {nextDisabled ? (
         <span className={`${styles.btn} ${styles.disabled}`} aria-disabled>
-          Next →
+          Next
         </span>
       ) : (
         <Link
@@ -59,7 +60,7 @@ export function Pagination({ page, totalPages, searchParams }: Props) {
           scroll={false}
           rel="next"
         >
-          Next →
+          Next
         </Link>
       )}
     </nav>
