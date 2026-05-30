@@ -174,10 +174,7 @@ export default async function LaunchDetailPage({
               <li key={i} className={styles.failure}>
                 {f.reason}
                 {f.time != null ? (
-                  <span className={styles.failureTime}>
-                    {" "}
-                    · T+{f.time}s
-                  </span>
+                  <span className={styles.failureTime}> · T+{f.time}s</span>
                 ) : null}
               </li>
             ))}

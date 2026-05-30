@@ -30,13 +30,7 @@ export function Orbit() {
 
       {/* rotating ring group */}
       <g className={styles.spinSlow} transform="rotate(-18 200 200)">
-        <ellipse
-          cx="200"
-          cy="200"
-          rx="170"
-          ry="78"
-          className={styles.ring}
-        />
+        <ellipse cx="200" cy="200" rx="170" ry="78" className={styles.ring} />
       </g>
       <g className={styles.spinMed} transform="rotate(26 200 200)">
         <ellipse

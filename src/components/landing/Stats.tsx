@@ -15,7 +15,12 @@ export function Stats({ counts }: { counts: LaunchCounts }) {
       <div className="container">
         <ul className={styles.grid}>
           {items.map((item, i) => (
-            <Reveal as="li" key={item.key} delay={i * 90} className={styles.cell}>
+            <Reveal
+              as="li"
+              key={item.key}
+              delay={i * 90}
+              className={styles.cell}
+            >
               <span className={styles.value}>
                 <CountUp to={counts[item.key]} />
               </span>

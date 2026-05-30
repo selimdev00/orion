@@ -25,7 +25,11 @@ export function IntroSteps() {
   const { ref, visible } = useReveal<HTMLDivElement>({ threshold: 0.25 });
 
   return (
-    <section id="intro" className={styles.section} aria-labelledby="intro-title">
+    <section
+      id="intro"
+      className={styles.section}
+      aria-labelledby="intro-title"
+    >
       <div className="container">
         <h2 id="intro-title" className={styles.heading}>
           Three steps to orbit

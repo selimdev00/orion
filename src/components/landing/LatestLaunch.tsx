@@ -43,10 +43,7 @@ export function LatestLaunch({ launch }: { launch: Launch | null }) {
               {launch.details ? (
                 <p className={styles.details}>{launch.details}</p>
               ) : null}
-              <Link
-                href={`/launches/${launch.id}`}
-                className={styles.viewLink}
-              >
+              <Link href={`/launches/${launch.id}`} className={styles.viewLink}>
                 View mission details →
               </Link>
             </div>
