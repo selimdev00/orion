@@ -44,7 +44,7 @@ export async function generateMetadata({
   const status = launchStatus(launch);
   const description =
     launch.details ??
-    `${launch.name} — flight #${launch.flight_number}, ${status.label}.`;
+    `${launch.name} - flight #${launch.flight_number}, ${status.label}.`;
   const patch = launch.links.patch.large ?? launch.links.patch.small;
 
   return {
@@ -155,7 +155,7 @@ export default async function LaunchDetailPage({
               </div>
               <div>
                 <dt>Height</dt>
-                <dd>{rocket.height.meters ?? "—"} m</dd>
+                <dd>{rocket.height.meters ?? "-"} m</dd>
               </div>
               <div>
                 <dt>First flight</dt>
