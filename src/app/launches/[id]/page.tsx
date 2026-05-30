@@ -11,12 +11,14 @@ import {
   type Launch,
   type Rocket,
 } from "@/lib/spacex";
-import { formatDateTime } from "@/lib/format";
+import { formatDateTime, formatDate } from "@/lib/format";
 import styles from "./detail.module.scss";
 
 export const revalidate = 3600;
 // Allow detail pages for launches not in generateStaticParams to render on demand.
 export const dynamicParams = true;
+
+const DASH = "-"; // mono dash for unknown values
 
 /** Pre-render a handful of recent launches at build time. */
 export async function generateStaticParams() {
@@ -58,6 +60,12 @@ export async function generateMetadata({
   };
 }
 
+/** Format a meters/kg figure with a unit, falling back to a mono dash. */
+function fig(value: number | null, unit: string): string {
+  if (value == null) return DASH;
+  return `${value.toLocaleString("en-US")} ${unit}`;
+}
+
 export default async function LaunchDetailPage({
   params,
 }: {
@@ -74,113 +82,168 @@ export default async function LaunchDetailPage({
     rocket = await getRocketById(launch.rocket).catch(() => null);
   }
 
-  const links: { href: string | null; label: string }[] = [
-    { href: launch.links.webcast, label: "Watch webcast" },
+  const flightNo = String(launch.flight_number).padStart(3, "0");
+
+  // One primary action (webcast), the rest as secondary ruled links.
+  const primary = launch.links.webcast
+    ? { href: launch.links.webcast, label: "Watch webcast" }
+    : null;
+  const secondary = [
+    { href: launch.links.article, label: "Read article" },
     { href: launch.links.wikipedia, label: "Wikipedia" },
-    { href: launch.links.article, label: "Article" },
-  ];
-  const activeLinks = links.filter((l) => l.href);
+  ].filter((l): l is { href: string; label: string } => Boolean(l.href));
+
+  // Spec ledger rows. Null-safe; unknowns render as a mono dash.
+  const specs: { label: string; value: string }[] = rocket
+    ? [
+        { label: "Rocket", value: rocket.name },
+        { label: "Type", value: rocket.type },
+        { label: "Height", value: fig(rocket.height.meters, "m") },
+        { label: "Diameter", value: fig(rocket.diameter.meters, "m") },
+        { label: "Mass", value: fig(rocket.mass.kg, "kg") },
+        { label: "Stages", value: String(rocket.stages) },
+        {
+          label: "Success rate",
+          value:
+            rocket.success_rate_pct != null
+              ? `${rocket.success_rate_pct}%`
+              : DASH,
+        },
+        {
+          label: "First flight",
+          value: rocket.first_flight ? formatDate(rocket.first_flight) : DASH,
+        },
+        { label: "Country", value: rocket.country || DASH },
+        { label: "Company", value: rocket.company || DASH },
+      ]
+    : [];
 
   return (
     <article className={`container ${styles.page}`}>
       <Link href="/launches" className={styles.back}>
-        ← All launches
+        <span aria-hidden="true">&larr;</span> All launches
       </Link>
 
-      <header className={styles.hero}>
-        <div className={styles.patchWrap}>
-          {patch ? (
-            // eslint-disable-next-line @next/next/no-img-element
+      <header className={styles.head}>
+        <div className={styles.headMain}>
+          <p className={styles.eyebrow}>
+            <span className={styles.flightNo}>FLIGHT {flightNo}</span>
+            <span className={styles.sep} aria-hidden="true">
+              /
+            </span>
+            <span>{formatDateTime(launch.date_utc)}</span>
+          </p>
+          <h1 className={styles.name}>{launch.name}</h1>
+          <div className={styles.status}>
+            <StatusBadge tone={status.tone} label={status.label} />
+          </div>
+        </div>
+
+        {patch ? (
+          <div className={styles.patchWrap}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={patch}
               alt={`${launch.name} mission patch`}
               className={styles.patch}
+              width={96}
+              height={96}
             />
+          </div>
+        ) : null}
+      </header>
+
+      <div className={styles.rule} role="presentation" />
+
+      <div className={styles.grid}>
+        <div className={styles.main}>
+          {launch.details ? (
+            <section className={styles.section}>
+              <h2 className={styles.sectionLabel}>Mission</h2>
+              <p className={styles.details}>{launch.details}</p>
+            </section>
           ) : (
-            <div className={styles.patchFallback} aria-hidden="true" />
+            <section className={styles.section}>
+              <h2 className={styles.sectionLabel}>Mission</h2>
+              <p className={styles.detailsEmpty}>
+                No mission summary on file for this flight.
+              </p>
+            </section>
+          )}
+
+          {launch.failures.length > 0 ? (
+            <section className={styles.note} aria-label="Failure log">
+              <p className={styles.noteLabel}>Failure log</p>
+              <ul className={styles.noteList}>
+                {launch.failures.map((f, i) => (
+                  <li key={i} className={styles.noteItem}>
+                    <span className={styles.noteTime}>
+                      {f.time != null ? `T+${f.time}s` : "T+ --"}
+                    </span>
+                    <span>{f.reason}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+
+          {(primary || secondary.length > 0) && (
+            <section className={styles.section}>
+              <h2 className={styles.sectionLabel}>Links</h2>
+              <div className={styles.actions}>
+                {primary ? (
+                  <a
+                    href={primary.href}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className={styles.primary}
+                  >
+                    {primary.label}
+                    <span className={styles.arrow} aria-hidden="true">
+                      &#8599;
+                    </span>
+                  </a>
+                ) : null}
+                {secondary.length > 0 ? (
+                  <ul className={styles.linkList}>
+                    {secondary.map((l) => (
+                      <li key={l.label}>
+                        <a
+                          href={l.href}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          className={styles.linkRow}
+                        >
+                          <span>{l.label}</span>
+                          <span className={styles.arrow} aria-hidden="true">
+                            &#8599;
+                          </span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+              </div>
+            </section>
           )}
         </div>
 
-        <div className={styles.heroBody}>
-          <div className={styles.metaRow}>
-            <span className={styles.flight}>
-              Flight #{launch.flight_number}
-            </span>
-            <StatusBadge label={status.label} tone={status.tone} />
-          </div>
-          <h1 className={styles.name}>{launch.name}</h1>
-          <p className={styles.date}>{formatDateTime(launch.date_utc)}</p>
-
-          {activeLinks.length > 0 ? (
-            <div className={styles.links}>
-              {activeLinks.map((l) => (
-                <a
-                  key={l.label}
-                  href={l.href as string}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className={styles.linkBtn}
-                >
-                  {l.label}
-                </a>
+        <aside className={styles.sidebar} aria-label="Vehicle specifications">
+          <h2 className={styles.sectionLabel}>Vehicle</h2>
+          {specs.length > 0 ? (
+            <dl className={styles.ledger}>
+              {specs.map((row) => (
+                <div key={row.label} className={styles.ledgerRow}>
+                  <dt className={styles.ledgerLabel}>{row.label}</dt>
+                  <dd className={styles.ledgerValue}>{row.value}</dd>
+                </div>
               ))}
-            </div>
-          ) : null}
-        </div>
-      </header>
-
-      {launch.details ? (
-        <section className={styles.block}>
-          <h2 className={styles.blockTitle}>Mission details</h2>
-          <p className={styles.details}>{launch.details}</p>
-        </section>
-      ) : null}
-
-      {rocket ? (
-        <section className={styles.block}>
-          <h2 className={styles.blockTitle}>Rocket</h2>
-          <div className={styles.rocketCard}>
-            <div>
-              <h3 className={styles.rocketName}>{rocket.name}</h3>
-              <p className={styles.rocketType}>{rocket.type}</p>
-            </div>
-            <dl className={styles.specs}>
-              <div>
-                <dt>Success rate</dt>
-                <dd>{rocket.success_rate_pct}%</dd>
-              </div>
-              <div>
-                <dt>Stages</dt>
-                <dd>{rocket.stages}</dd>
-              </div>
-              <div>
-                <dt>Height</dt>
-                <dd>{rocket.height.meters ?? "-"} m</dd>
-              </div>
-              <div>
-                <dt>First flight</dt>
-                <dd>{rocket.first_flight}</dd>
-              </div>
             </dl>
-          </div>
-        </section>
-      ) : null}
-
-      {launch.failures.length > 0 ? (
-        <section className={styles.block}>
-          <h2 className={styles.blockTitle}>Failures</h2>
-          <ul className={styles.failures}>
-            {launch.failures.map((f, i) => (
-              <li key={i} className={styles.failure}>
-                {f.reason}
-                {f.time != null ? (
-                  <span className={styles.failureTime}> · T+{f.time}s</span>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
+          ) : (
+            <p className={styles.detailsEmpty}>No vehicle record.</p>
+          )}
+        </aside>
+      </div>
 
       <Gallery images={launch.links.flickr.original} name={launch.name} />
     </article>
