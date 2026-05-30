@@ -72,6 +72,7 @@ export interface Rocket {
   country: string;
   company: string;
   height: { meters: number | null; feet: number | null };
+  diameter: { meters: number | null; feet: number | null };
   mass: { kg: number | null; lb: number | null };
   flickr_images: string[];
 }
