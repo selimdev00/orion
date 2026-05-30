@@ -1,33 +1,38 @@
+import { Fragment } from "react";
 import { CountUp } from "./CountUp";
-import { Reveal } from "@/components/Reveal";
-import type { LaunchCounts } from "@/lib/spacex";
 import styles from "./Stats.module.scss";
 
-const items: { key: keyof LaunchCounts; label: string }[] = [
-  { key: "total", label: "Total launches" },
-  { key: "successful", label: "Successful" },
-  { key: "upcoming", label: "Upcoming" },
-];
+interface Props {
+  counts: {
+    total: number;
+    successful: number;
+    upcoming: number;
+  };
+}
 
-export function Stats({ counts }: { counts: LaunchCounts }) {
+export function Stats({ counts }: Props) {
+  const items = [
+    { label: "Total launches", value: counts.total },
+    { label: "Successful", value: counts.successful },
+    { label: "Upcoming", value: counts.upcoming },
+  ];
+
   return (
-    <section className={styles.section} aria-label="Launch statistics">
-      <div className="container">
-        <ul className={styles.grid}>
-          {items.map((item, i) => (
-            <Reveal
-              as="li"
-              key={item.key}
-              delay={i * 90}
-              className={styles.cell}
-            >
-              <span className={styles.value}>
-                <CountUp to={counts[item.key]} />
+    <section className={styles.section}>
+      <div className={`container ${styles.strip}`}>
+        {items.map((item, i) => (
+          <Fragment key={item.label}>
+            {i > 0 ? (
+              <span className={styles.divider} aria-hidden="true" />
+            ) : null}
+            <div className={styles.item}>
+              <span className={styles.figure}>
+                <CountUp to={item.value} />
               </span>
               <span className={styles.label}>{item.label}</span>
-            </Reveal>
-          ))}
-        </ul>
+            </div>
+          </Fragment>
+        ))}
       </div>
     </section>
   );

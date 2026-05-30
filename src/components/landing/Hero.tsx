@@ -1,47 +1,41 @@
 import Link from "next/link";
-import { Starfield } from "./Starfield";
-import { Orbit } from "./Orbit";
 import styles from "./Hero.module.scss";
+
+const TELEMETRY = [
+  { k: "Source", v: "SpaceX API v4" },
+  { k: "Refresh", v: "ISR / 3600s" },
+  { k: "Programs", v: "Falcon · Starship" },
+];
 
 export function Hero() {
   return (
-    <section className={styles.hero} aria-labelledby="hero-title">
-      <Starfield />
+    <section className={styles.hero}>
+      <div className="container">
+        <p className={`eyebrow ${styles.eyebrow}`}>SpaceX launch archive</p>
 
-      <div className={`container ${styles.inner}`}>
-        <div className={styles.copy}>
-          <p className={styles.eyebrow}>SpaceX launch archive</p>
-          <h1 id="hero-title" className={styles.title}>
-            Explore every
-            <br />
-            <span className={styles.accent}>launch</span> ever flown
-          </h1>
-          <p className={styles.lead}>
-            Mission patches, rockets, outcomes and webcasts for hundreds of
-            SpaceX flights. Search, filter and dive into the details.
-          </p>
-          <div className={styles.actions}>
-            <Link href="/launches" className={styles.cta}>
-              Browse launches
-              <span className={styles.ctaArrow} aria-hidden="true">
-                →
-              </span>
-            </Link>
-            <a href="#intro" className={styles.ghost}>
-              How it works
-            </a>
-          </div>
+        <h1 className={styles.title}>
+          A complete record of every Falcon and Starship launch.
+        </h1>
+
+        <p className={styles.lead}>
+          Browse, search and filter the full flight history. Patches, rockets,
+          outcomes and webcasts, pulled live from the public SpaceX API.
+        </p>
+
+        <div className={styles.actions}>
+          <Link href="/launches" className={styles.primary}>
+            Open the archive
+          </Link>
         </div>
 
-        <div className={styles.visual}>
-          <Orbit />
-        </div>
-      </div>
-
-      <div className={styles.scrollHint} aria-hidden="true">
-        <span className={styles.mouse}>
-          <span className={styles.wheel} />
-        </span>
+        <dl className={styles.telemetry} aria-label="Data source">
+          {TELEMETRY.map((t) => (
+            <div key={t.k} className={styles.cell}>
+              <dt>{t.k}</dt>
+              <dd>{t.v}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </section>
   );

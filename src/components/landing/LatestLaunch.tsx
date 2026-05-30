@@ -1,54 +1,84 @@
 import Link from "next/link";
+import Image from "next/image";
 import { StatusBadge } from "@/components/StatusBadge";
-import { Reveal } from "@/components/Reveal";
 import { launchStatus, type Launch } from "@/lib/spacex";
 import { formatDateTime } from "@/lib/format";
 import styles from "./LatestLaunch.module.scss";
 
-export function LatestLaunch({ launch }: { launch: Launch | null }) {
-  if (!launch) return null;
+interface Props {
+  launch: Launch | null;
+}
+
+export function LatestLaunch({ launch }: Props) {
+  if (!launch) {
+    return (
+      <section className={styles.section} id="latest">
+        <div className="container">
+          <p className={`eyebrow ${styles.eyebrow}`}>Latest mission</p>
+          <p className={styles.empty}>
+            Live launch data is unavailable right now. The archive remains
+            browsable.
+          </p>
+        </div>
+      </section>
+    );
+  }
+
   const status = launchStatus(launch);
   const patch = launch.links.patch.large ?? launch.links.patch.small;
 
   return (
-    <section className={styles.section} aria-labelledby="latest-title">
+    <section className={styles.section} id="latest">
       <div className="container">
-        <Reveal>
-          <p className={styles.kicker}>Latest launch</p>
-        </Reveal>
+        <p className={`eyebrow ${styles.eyebrow}`}>Latest mission</p>
 
-        <Reveal delay={80}>
-          <article className={styles.card}>
-            <div className={styles.media}>
-              {patch ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={patch}
-                  alt={`${launch.name} mission patch`}
-                  className={styles.patch}
-                  width={180}
-                  height={180}
-                />
-              ) : (
-                <div className={styles.mediaFallback} aria-hidden="true" />
-              )}
-            </div>
+        <div className={styles.inner}>
+          <div className={styles.media}>
+            {patch ? (
+              <Image
+                src={patch}
+                alt=""
+                width={180}
+                height={180}
+                className={styles.patch}
+                unoptimized
+              />
+            ) : (
+              <span className={styles.patchFallback} aria-hidden="true">
+                ◎
+              </span>
+            )}
+          </div>
 
-            <div className={styles.content}>
-              <StatusBadge label={status.label} tone={status.tone} />
-              <h2 id="latest-title" className={styles.name}>
-                {launch.name}
-              </h2>
-              <p className={styles.date}>{formatDateTime(launch.date_utc)}</p>
-              {launch.details ? (
-                <p className={styles.details}>{launch.details}</p>
-              ) : null}
-              <Link href={`/launches/${launch.id}`} className={styles.viewLink}>
-                View mission details →
-              </Link>
-            </div>
-          </article>
-        </Reveal>
+          <div className={styles.body}>
+            <h2 className={styles.name}>{launch.name}</h2>
+
+            <dl className={styles.meta}>
+              <div className={styles.metaCell}>
+                <dt>Flight</dt>
+                <dd>{String(launch.flight_number).padStart(3, "0")}</dd>
+              </div>
+              <div className={styles.metaCell}>
+                <dt>Date</dt>
+                <dd>{formatDateTime(launch.date_utc)}</dd>
+              </div>
+              <div className={styles.metaCell}>
+                <dt>Status</dt>
+                <dd>
+                  <StatusBadge tone={status.tone} size="sm" />
+                </dd>
+              </div>
+            </dl>
+
+            {launch.details ? (
+              <p className={styles.details}>{launch.details}</p>
+            ) : null}
+
+            <Link href={`/launches/${launch.id}`} className={styles.link}>
+              Read mission record
+            </Link>
+          </div>
+        </div>
       </div>
     </section>
   );
