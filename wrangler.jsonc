@@ -7,5 +7,6 @@
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
-  }
+  },
+  "routes": [{ "pattern": "orion.selim.services", "custom_domain": true }]
 }
