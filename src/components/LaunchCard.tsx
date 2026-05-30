@@ -1,62 +1,55 @@
+import Image from "next/image";
 import Link from "next/link";
-import { StatusBadge } from "./StatusBadge";
 import { launchStatus, type Launch, type PopulatedLaunch } from "@/lib/spacex";
 import { formatDate } from "@/lib/format";
+import { StatusBadge } from "./StatusBadge";
 import styles from "./LaunchCard.module.scss";
 
 interface Props {
   launch: Launch | PopulatedLaunch;
-  /** Optional rocket name shown under the date (list view populates this). */
+  /** Accepted for call-site compatibility; the ledger row does not render it. */
   rocketName?: string | null;
 }
 
-export function LaunchCard({ launch, rocketName }: Props) {
+/**
+ * A single launch as an editorial ledger row, not a card.
+ * Columns on desktop: flight no. / patch + mission / date / status.
+ */
+export function LaunchCard({ launch }: Props) {
   const status = launchStatus(launch);
-  const patch = launch.links.patch.small;
+  const patch = launch.links?.patch?.small;
 
   return (
-    <Link href={`/launches/${launch.id}`} className={styles.card}>
-      <div className={styles.patchWrap}>
+    <Link href={`/launches/${launch.id}`} className={styles.row}>
+      <span className={styles.flight}>
+        <span className={styles.marker} aria-hidden="true" />
+        {String(launch.flight_number).padStart(3, "0")}
+      </span>
+
+      <span className={styles.mission}>
         {patch ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={patch}
-            alt={`${launch.name} mission patch`}
+            alt=""
+            width={28}
+            height={28}
             className={styles.patch}
-            loading="lazy"
-            width={96}
-            height={96}
+            unoptimized
           />
         ) : (
-          <div className={styles.patchFallback} aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="34" height="34">
-              <circle
-                cx="12"
-                cy="12"
-                r="9"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.4"
-                opacity="0.5"
-              />
-              <circle cx="12" cy="12" r="2.5" fill="currentColor" />
-            </svg>
-          </div>
+          <span className={styles.placeholder} aria-hidden="true">
+            ◎
+          </span>
         )}
-      </div>
+        <span className={styles.name}>{launch.name}</span>
+      </span>
 
-      <div className={styles.body}>
-        <div className={styles.topRow}>
-          <span className={styles.flight}>#{launch.flight_number}</span>
-          <StatusBadge label={status.label} tone={status.tone} />
-        </div>
-        <h3 className={styles.name}>{launch.name}</h3>
-        <p className={styles.date}>{formatDate(launch.date_utc)}</p>
-        {rocketName ? <p className={styles.rocket}>{rocketName}</p> : null}
-      </div>
+      <time className={styles.date} dateTime={launch.date_utc}>
+        {formatDate(launch.date_utc)}
+      </time>
 
-      <span className={styles.arrow} aria-hidden="true">
-        →
+      <span className={styles.status}>
+        <StatusBadge tone={status.tone} label={status.label} size="sm" />
       </span>
     </Link>
   );

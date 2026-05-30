@@ -5,9 +5,8 @@
   height: var(--header-h);
   display: flex;
   align-items: center;
-  background: color-mix(in srgb, var(--bg) 72%, transparent);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--paper-2) 85%, transparent);
+  border-bottom: 1px solid var(--rule);
 }
 
 .inner {
@@ -19,54 +18,67 @@
 
 .logo {
   display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-weight: 700;
-  font-size: 1.1rem;
-  letter-spacing: 0.02em;
+  align-items: baseline;
+  gap: 0.1em;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink);
 }
 
 .mark {
   color: var(--accent);
-  display: inline-flex;
-
-  .markCore {
-    transform-origin: 12px 12px;
-    animation: spin 8s linear infinite;
-  }
+  margin-right: var(--space-2);
 }
 
-.word {
-  background: linear-gradient(90deg, var(--text), var(--accent));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.dot {
+  color: var(--accent);
 }
 
 .nav {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-4);
 }
 
 .link {
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-pill);
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  font-weight: 500;
-  transition:
-    color var(--dur-fast) var(--ease),
-    background var(--dur-fast) var(--ease);
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  color: var(--ink-muted);
+  padding: var(--space-2) 0;
+  transition: color var(--dur-fast) var(--ease);
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur) var(--ease);
+  }
 
   &:hover {
-    color: var(--text);
-    background: var(--bg-card);
-  }
-}
+    color: var(--ink);
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+    &::after {
+      transform: scaleX(1);
+    }
+  }
+
+  &.active {
+    color: var(--accent-ink);
+
+    &::after {
+      transform: scaleX(1);
+    }
   }
 }
